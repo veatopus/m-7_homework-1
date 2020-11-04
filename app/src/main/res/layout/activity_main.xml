@@ -20,11 +20,38 @@
         android:id="@+id/main_activity_edit_text_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:hint="@string/enter_password"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/main_activity_text_view_password"
         android:autofillHints="user_password"
-        android:inputType="textPassword" />
+        android:hint="@string/enter_password"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/main_activity_text_view_password" />
+
+    <ScrollView
+        android:padding="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/main_activity_text_view_history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/main_activity_button_history"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16sp"
+        android:textAllCaps="false"
+        android:text="@string/show_history"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

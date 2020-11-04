@@ -3,4 +3,6 @@
     <string name="password">password</string>
     <string name="enter_password">enter password</string>
     <string name="save">save</string>
+    <string name="show_history">show history</string>
+    <string name="hide_history">hide history</string>
 </resources>
