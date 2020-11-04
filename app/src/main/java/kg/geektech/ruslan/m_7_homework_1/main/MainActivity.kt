@@ -26,11 +26,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun showHistoryAction() {
         main_activity_button_history.setOnClickListener {
-            if (main_activity_text_view_history.visibility == View.VISIBLE) {
-               hideHistory()
-            } else showHistory()
-            }
+            if (main_activity_text_view_history.visibility == View.VISIBLE) hideHistory()
+            else showHistory()
         }
+    }
 
     private fun hideHistory() {
         main_activity_text_view_history.visibility = View.GONE
@@ -41,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         main_activity_text_view_history.visibility = View.VISIBLE
         main_activity_button_history.setText(R.string.hide_history)
         updateHistory()
-}
+    }
 
     private fun updateHistory() {
         main_activity_text_view_history.text = ""

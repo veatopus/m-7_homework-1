@@ -21,16 +21,13 @@ class EditActivity : AppCompatActivity() {
     private fun setDataAction() {
         edit_activity_button_password.setOnClickListener {
             val newText = edit_activity_edit_text_edit.text.toString()
-            if (newText != text){
-                setData(newText)
-            } else{
-                showToast(this, "введите новый пароль")
-            }
+            if (newText != text) setData(newText)
+            else showToast(this, "введите новый пароль")
         }
     }
 
     private fun setData(text: String) {
-        if (text.isNotEmpty()){
+        if (text.isNotEmpty()) {
             val intent = Intent()
             intent.putExtra(RESULT_CODE, text)
             setResult(Activity.RESULT_OK, intent)
@@ -43,7 +40,7 @@ class EditActivity : AppCompatActivity() {
         edit_activity_edit_text_edit.setText(text)
     }
 
-    companion object{
+    companion object {
         const val RESULT_CODE = "code_result"
     }
 }
