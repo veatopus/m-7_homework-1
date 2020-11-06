@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">m-7_homework-1</string>
-    <string name="password">password</string>
-    <string name="enter_password">enter password</string>
+    <string name="enter_url">enter url image</string>
     <string name="save">save</string>
-    <string name="show_history">show history</string>
-    <string name="hide_history">hide history</string>
+    <string name="extended_fab_content_desc">content_desc</string>
+    <string name="title_activity_image_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
