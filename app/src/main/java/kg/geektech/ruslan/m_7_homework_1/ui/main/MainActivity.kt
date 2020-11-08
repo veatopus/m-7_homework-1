@@ -1,13 +1,19 @@
 package kg.geektech.ruslan.m_7_homework_1.ui.main
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import kg.geektech.ruslan.m_7_homework_1.R
 import kg.geektech.ruslan.m_7_homework_1.adapters.ImageAdapter
 import kg.geektech.ruslan.m_7_homework_1.core.BaseOnItemClick
+import kg.geektech.ruslan.m_7_homework_1.core.showToast
+import kg.geektech.ruslan.m_7_homework_1.interfaces.OnPopupMenuClickListener
 import kg.geektech.ruslan.m_7_homework_1.ui.edit.EditActivity
 import kg.geektech.ruslan.m_7_homework_1.ui.image_fullscreen.ImageFullscreenActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -15,9 +21,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 const val EDIT_ACTIVITY = 41
 
-class MainActivity : AppCompatActivity(), BaseOnItemClick {
+class MainActivity : AppCompatActivity(), BaseOnItemClick, OnPopupMenuClickListener{
     private val listImageUrl = ArrayList<String>()
-    private val adapter = ImageAdapter(listImageUrl, this)
+    private val adapter = ImageAdapter(listImageUrl, this, this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,5 +81,34 @@ class MainActivity : AppCompatActivity(), BaseOnItemClick {
 
     override fun onItemClick(position: Int) {
         ImageFullscreenActivity.newInstance(this, listImageUrl[position])
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    private fun showPopupMenu(v: View, position: Int) {
+        val popupMenu = PopupMenu(this, v)
+        popupMenu.inflate(R.menu.popup_menu)
+        popupMenu
+            .setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.delete -> {
+                        popupMenuDelete(position)
+                        return@setOnMenuItemClickListener true
+                    }
+                    R.id.no -> return@setOnMenuItemClickListener true
+                    else -> return@setOnMenuItemClickListener false
+                }
+            }
+        popupMenu.show()
+    }
+
+    private fun popupMenuDelete(position: Int) {
+        if (position > 0) {
+            adapter.notifyItemRemoved(position)
+            listImageUrl.removeAt(position)
+        } else showToast(this, "первый элемент удалять нельзя")
+    }
+
+    override fun onPopupMenuClick(v: View?, position: Int) {
+        v?.let { showPopupMenu(it, position) }
     }
 }

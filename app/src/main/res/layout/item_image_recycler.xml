@@ -6,22 +6,31 @@
     android:layout_margin="16dp"
     app:cardCornerRadius="16dp">
 
-    <ImageView
-        android:id="@+id/item_image_recyclerview_image_view_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/extended_fab_content_desc"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/ic_launcher" />
+        android:orientation="horizontal"
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/item_image_recyclerview_button_popup_menu"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="end"
-        android:layout_margin="16dp"
-        android:background="@android:color/transparent"
-        android:drawableEnd="@drawable/ic_more_horiz" />
+        <ImageView
+            android:id="@+id/item_image_recyclerview_image_view_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/extended_fab_content_desc"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher" />
+
+        <Button
+            android:id="@+id/item_image_recyclerview_button_popup_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@android:color/transparent"
+            android:drawableEnd="@drawable/ic_more_horiz"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.cardview.widget.CardView>
