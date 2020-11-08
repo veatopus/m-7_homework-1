@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import kg.geektech.ruslan.m_7_homework_1.R
 import kg.geektech.ruslan.m_7_homework_1.adapters.ImageAdapter
 import kg.geektech.ruslan.m_7_homework_1.core.BaseOnItemClick
+import kg.geektech.ruslan.m_7_homework_1.ui.edit.EditActivity
 import kg.geektech.ruslan.m_7_homework_1.ui.image_fullscreen.ImageFullscreenActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -22,7 +23,16 @@ class MainActivity : AppCompatActivity(), BaseOnItemClick {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setArg()
+        onEditAction()
         supportActionBar?.title = "main"
+    }
+
+    private fun onEditAction() {
+        activity_main_fab_edit.setOnClickListener { onEdit() }
+    }
+
+    private fun onEdit() {
+        startActivityForResult(Intent(this, EditActivity::class.java), EDIT_ACTIVITY)
     }
 
     private fun setArg() {
@@ -40,12 +50,12 @@ class MainActivity : AppCompatActivity(), BaseOnItemClick {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == EDIT_ACTIVITY && data != null) {
-
+            data.getStringExtra(EditActivity.RESULT_CODE)?.let { addDataInRecycler(it) }
         }
     }
 
 
-    fun addDataInRecycler(url: String){
+    private fun addDataInRecycler(url: String){
         listImageUrl.add(url)
         adapter.notifyDataSetChanged()
     }
