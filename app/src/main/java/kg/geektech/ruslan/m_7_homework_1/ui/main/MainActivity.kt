@@ -4,33 +4,48 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import kg.geektech.ruslan.m_7_homework_1.R
 import kg.geektech.ruslan.m_7_homework_1.adapters.ImageAdapter
-import kg.geektech.ruslan.m_7_homework_1.core.BaseOnItemClick
 import kg.geektech.ruslan.m_7_homework_1.core.showToast
 import kg.geektech.ruslan.m_7_homework_1.interfaces.OnPopupMenuClickListener
 import kg.geektech.ruslan.m_7_homework_1.ui.edit.EditActivity
 import kg.geektech.ruslan.m_7_homework_1.ui.image_fullscreen.ImageFullscreenActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-
 const val EDIT_ACTIVITY = 41
-
-class MainActivity : AppCompatActivity(), BaseOnItemClick, OnPopupMenuClickListener{
+class MainActivity : AppCompatActivity(), OnPopupMenuClickListener{
     private val listImageUrl = ArrayList<String>()
-    private val adapter = ImageAdapter(listImageUrl, this, this)
+    private var mViewModel: MainViewModel? = null
+    private var adapter: ImageAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        init()
         setArg()
-        onEditAction()
+        observe()
         supportActionBar?.title = "main"
+    }
+
+    private fun observe() {
+        mViewModel?.dataListUrl?.observe(this, Observer { setDataInRecycler(it) })
+        mViewModel?.imageForFullscreen?.observe(this, Observer {
+            ImageFullscreenActivity.newInstance(this, it)
+        })
+        mViewModel?.showToast?.observe(this, Observer { showToast(this, it) })
+
+    }
+
+    private fun init() {
+        mViewModel = ViewModelProvider(this, MainViewModelFactory()).get(MainViewModel::class.java)
+        adapter = ImageAdapter(listImageUrl, mViewModel!!, this)
+
     }
 
     private fun onEditAction() {
@@ -42,7 +57,6 @@ class MainActivity : AppCompatActivity(), BaseOnItemClick, OnPopupMenuClickListe
     }
 
     private fun setArg() {
-        addUrl()
         activity_main_recyclerview_image.adapter = adapter
         activity_main_recyclerview_image.addItemDecoration(
             DividerItemDecoration(
@@ -50,7 +64,7 @@ class MainActivity : AppCompatActivity(), BaseOnItemClick, OnPopupMenuClickListe
                 DividerItemDecoration.VERTICAL
             )
         )
-
+        onEditAction()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -63,24 +77,13 @@ class MainActivity : AppCompatActivity(), BaseOnItemClick, OnPopupMenuClickListe
 
     private fun addDataInRecycler(url: String){
         listImageUrl.add(url)
-        adapter.notifyDataSetChanged()
+        adapter?.notifyDataSetChanged()
     }
 
-    private fun addUrl() {
-        listImageUrl.add("https://i.pinimg.com/originals/2d/ad/72/2dad721f57e4977a72fd90c67b6191b3.jpg")
-        listImageUrl.add("https://i.pinimg.com/originals/62/5b/82/625b824dc1cb31c58361655ff5e47f9b.jpg")
-        listImageUrl.add("https://images.pexels.com/photos/2893685/pexels-photo-2893685.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500")
-        listImageUrl.add("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg")
-        listImageUrl.add("https://oddstuffmagazine.com/wp-content/uploads/2020/05/Bow-Lake-in-Banff-National-Park.jpg")
-        listImageUrl.add("https://inspiredmagz.com/wp-content/uploads/2014/01/nature-01.jpg")
-        listImageUrl.add("https://wallpaperaccess.com/full/137242.jpg")
-        listImageUrl.add("https://webneel.com/daily/sites/default/files/images/daily/09-2013/17-most-amazing-photo-hight-sea-tide.jpg")
-        listImageUrl.add("https://instamoz.com/images/Amazing-HD-Amazing-World-Wallpaper.jpg")
-        listImageUrl.add("https://1.bp.blogspot.com/-XQuT9WokfJM/UXyImRGlhsI/AAAAAAAAtSs/jL_oGDXVCVk/s1600/Amazing+HD+Desktop+Wallpapers+(1).jpeg")
-    }
-
-    override fun onItemClick(position: Int) {
-        ImageFullscreenActivity.newInstance(this, listImageUrl[position])
+    private fun setDataInRecycler(data: List<String>){
+        listImageUrl.clear()
+        listImageUrl.addAll(data)
+        adapter?.notifyDataSetChanged()
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -91,7 +94,8 @@ class MainActivity : AppCompatActivity(), BaseOnItemClick, OnPopupMenuClickListe
             .setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.delete -> {
-                        popupMenuDelete(position)
+                        mViewModel?.popupMenuDelete(position)
+                        adapter?.notifyItemRemoved(position)
                         return@setOnMenuItemClickListener true
                     }
                     R.id.no -> return@setOnMenuItemClickListener true
@@ -99,13 +103,6 @@ class MainActivity : AppCompatActivity(), BaseOnItemClick, OnPopupMenuClickListe
                 }
             }
         popupMenu.show()
-    }
-
-    private fun popupMenuDelete(position: Int) {
-        if (position > 0) {
-            adapter.notifyItemRemoved(position)
-            listImageUrl.removeAt(position)
-        } else showToast(this, "первый элемент удалять нельзя")
     }
 
     override fun onPopupMenuClick(v: View?, position: Int) {
